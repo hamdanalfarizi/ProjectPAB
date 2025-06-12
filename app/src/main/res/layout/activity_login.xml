@@ -96,11 +96,11 @@
                 android:textColor="#000000"
                 android:layout_weight="1" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Forgot Password?"
-                android:textColor="#7D84B2" />
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Forgot Password?"-->
+<!--                android:textColor="#7D84B2" />-->
         </LinearLayout>
 
         <!-- Login Button -->
