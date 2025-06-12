@@ -226,6 +226,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 null, null, null);
     }
 
+    // forgot password untuk update paddword
+    public boolean updatePassword(String email, String newPassword) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("password", newPassword);
+
+        int result = db.update("users", values, "email = ?", new String[]{email});
+        return result > 0;
+    }
 
     public int getUserIdByEmail(String email) {
         SQLiteDatabase db = this.getReadableDatabase();

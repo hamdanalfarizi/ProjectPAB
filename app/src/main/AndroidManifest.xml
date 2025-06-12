@@ -13,6 +13,9 @@
         android:theme="@style/Theme.ProjectPAB"
         tools:targetApi="31">
         <activity
+            android:name=".ResetPasswordActivity"
+            android:exported="false" />
+        <activity
             android:name=".NotifKlienActivity"
             android:exported="false" />
         <activity

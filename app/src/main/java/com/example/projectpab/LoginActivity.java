@@ -1,5 +1,6 @@
 package com.example.projectpab;
 
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import androidx.appcompat.widget.AppCompatButton;
 public class LoginActivity extends AppCompatActivity {
 
     private AutoCompleteTextView etEmail;
+    private TextView tvForgotPassword;
     private EditText etPassword;
     private AppCompatButton btnLogin;
     private CheckBox checkBoxRemember;
@@ -48,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
         checkBoxRemember = findViewById(R.id.checkBoxRemember);
+        tvForgotPassword = findViewById(R.id.tvForgotPassword);
         tvSignup = findViewById(R.id.tvSignup);
     }
 
@@ -84,6 +87,10 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
             startActivity(intent);
         });
+        tvForgotPassword.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, ResetPasswordActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void showRoleDialog() {
@@ -99,6 +106,10 @@ public class LoginActivity extends AppCompatActivity {
                 .setNegativeButton("Batal", null)
                 .show();
     }
+
+    //forget password
+
+
 
     private int getSelectedRoleIndex() {
         for (int i = 0; i < roles.length; i++) {
