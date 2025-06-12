@@ -1,0 +1,12 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.ProjectPAB" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <item name="colorPrimary">#3E5A9D</item>
+        <item name="colorPrimaryVariant">#2F467C</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    </style>
+
+    <style name="Theme.ProjectPAB" parent="Base.Theme.ProjectPAB" />
+</resources>

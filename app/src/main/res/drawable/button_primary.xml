@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Warna latar tombol -->
+    <solid android:color="#3E5A9D" /> <!-- Biru tua -->
+
+    <!-- Membulatkan sudut -->
+    <corners android:radius="24dp" />
+
+    <!-- Tambahan padding dalam tombol (opsional jika ingin spacing lebih) -->
+    <padding
+        android:left="12dp"
+        android:top="10dp"
+        android:right="12dp"
+        android:bottom="10dp" />
+</shape>

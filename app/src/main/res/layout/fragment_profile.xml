@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.widget.TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tabHost"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TabWidget
+            android:id="@android:id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#2563EB"
+            android:tabStripEnabled="false"
+            android:padding="8dp" />
+
+        <FrameLayout
+            android:id="@android:id/tabcontent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="12dp">
+
+            <!-- TAB TENTANG -->
+            <ScrollView
+                android:id="@+id/tabTentang"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#FFFFFF"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/profileImage"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:src="@drawable/fotoprofile"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/bg_circle"
+                        android:padding="8dp"
+                        android:scaleType="centerCrop"
+                        android:contentDescription="@string/profile_image_description" />
+
+                    <!-- Tombol Edit Profile Modern -->
+                    <Button
+                        android:id="@+id/btnEditProfile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:text="Profile"
+                        android:textAllCaps="false"
+                        android:layout_marginTop="16dp"
+                        android:backgroundTint="#10B981"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:drawablePadding="12dp"
+                        android:paddingStart="32dp"
+                        android:paddingEnd="32dp"
+                        android:layout_gravity="center"
+                        android:elevation="4dp"
+                        android:stateListAnimator="@null"
+                        android:radius="24dp" />
+
+                    <TextView
+                        android:id="@+id/tvName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#212121"
+                        android:textSize="18sp"
+                        android:layout_marginTop="24dp" />
+
+                    <TextView
+                        android:id="@+id/tvEmail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#424242"
+                        android:textSize="16sp"
+                        android:layout_marginTop="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvHobby"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#424242"
+                        android:textSize="16sp"
+                        android:layout_marginTop="8dp" />
+                    <!-- Tombol Logout -->
+                    <Button
+                        android:id="@+id/btnLogout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:text="Logout"
+                        android:textAllCaps="false"
+                        android:layout_marginTop="16dp"
+                        android:backgroundTint="#EF4444"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:drawablePadding="12dp"
+                        android:paddingStart="32dp"
+                        android:paddingEnd="32dp"
+                        android:layout_gravity="center"
+                        android:elevation="4dp"
+                        android:stateListAnimator="@null"
+                        android:radius="24dp" />
+                </LinearLayout>
+            </ScrollView>
+
+            <!-- TAB PORTOFOLIO -->
+            <ScrollView
+                android:id="@+id/tabPortofolio"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#FFFFFF"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#EEEEEE"
+                    android:padding="16dp"
+                    android:layout_marginTop="12dp"
+                    android:elevation="2dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Portofolio:"
+                        android:textColor="#212121"
+                        android:textSize="18sp"
+                        android:layout_marginBottom="12dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="• UI/UX Design App Booking Futsal"
+                        android:textColor="#424242"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="• Android App: 'Dun Booking'"
+                        android:textColor="#424242"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="• Website: hamdan-portfolio.com"
+                        android:textColor="#424242"
+                        android:layout_marginBottom="4dp" />
+                </LinearLayout>
+            </ScrollView>
+
+            <!-- TAB ULASAN -->
+            <ScrollView
+                android:id="@+id/tabUlasan"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#FFFFFF"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#EEEEEE"
+                    android:padding="16dp"
+                    android:layout_marginTop="12dp"
+                    android:elevation="2dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ulasan:"
+                        android:textColor="#212121"
+                        android:textSize="18sp"
+                        android:layout_marginBottom="12dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="⭐️⭐️⭐️⭐️⭐️ - Sangat profesional dan komunikatif!"
+                        android:textColor="#424242"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="⭐️⭐️⭐️⭐️ - Aplikasi yang dibuat sangat membantu bisnis kami."
+                        android:textColor="#424242"
+                        android:layout_marginBottom="8dp" />
+                </LinearLayout>
+            </ScrollView>
+        </FrameLayout>
+    </LinearLayout>
+</android.widget.TabHost>

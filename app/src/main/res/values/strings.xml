@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Flance</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_profile">Profile</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_chat">Chat\n</string>
+    <string name="title_search">Search</string>
+    <string name="profile_image_description">Profil Description\n</string>
+</resources>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="blue">#2196F3</color>
+    <color name="gray">#9E9E9E</color>
+    <color name="colorPrimary">#2196F3</color>
+    <color name="colorPrimaryDark">#1976D2</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="white">#FFFFFF</color>
+    <color name="gray_light">#F5F5F5</color>
+    <color name="gray_medium">#CCCCCC</color>
+    <color name="gray_dark">#666666</color>
+    <color name="red">#F44336</color>
+
+    <!-- Tambahan untuk Bottom Navigation -->
+    <color name="nav_item_active">#3E5A9D</color> <!-- Warna aktif (dari themes) -->
+    <color name="nav_item_inactive">#9E9E9E</color> <!-- Warna nonaktif -->
+    <color name="nav_bg">#FFFFFF</color> <!-- Background bottom nav -->
+</resources>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/etEditJobTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Judul Pekerjaan"
+        android:padding="12dp"
+        android:minHeight="48dp"
+        android:background="?attr/editTextBackground"/>
+
+    <EditText
+        android:id="@+id/etEditJobDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Deskripsi Pekerjaan"
+        android:inputType="textMultiLine"
+        android:lines="4"
+        android:maxLines="6"
+        android:background="?attr/editTextBackground"/>
+
+    <EditText
+        android:id="@+id/etEditJobBudget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Anggaran"
+        android:inputType="number"
+        android:padding="12dp"
+        android:minHeight="48dp"
+        android:background="?attr/editTextBackground"
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp" />
+
+
+</LinearLayout>
