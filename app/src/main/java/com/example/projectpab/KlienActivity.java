@@ -436,8 +436,8 @@ public class KlienActivity extends AppCompatActivity {
 
         btnLogout.setOnClickListener(v -> {
             new AlertDialog.Builder(this)
-                    .setTitle("Konfirmasi Logout")
-                    .setMessage("Apakah Anda yakin ingin logout?")
+                    .setTitle("Confirm Logout")
+                    .setMessage("Are you sure you want to logout?")
                     .setPositiveButton(android.R.string.yes, (dialog, which) -> {
                         // Logout jika pengguna menekan "Ya"
                         SharedPreferences sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE);
@@ -473,27 +473,27 @@ public class KlienActivity extends AppCompatActivity {
 
     private void showApplicationActionDialog(ApplicationItem application) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Kelola Lamaran");
+        builder.setTitle("Manage Applications");
 
         String message = "Job: " + application.jobTitle +
                 "\nPelamar: " + application.applicantName +
                 "\nStatus saat ini: " + application.status.toUpperCase() +
-                "\n\nPilih tindakan:";
+                "\n\nSelect Action:";
 
         builder.setMessage(message);
 
         // Tombol ACC (Terima)
-        builder.setPositiveButton("✓ TERIMA", (dialog, which) -> {
-            showConfirmationDialog(application, "accepted", "menerima");
+        builder.setPositiveButton("✓ ACC", (dialog, which) -> {
+            showConfirmationDialog(application, "accepted", "accept");
         });
 
         // Tombol TOLAK
-        builder.setNegativeButton("✗ TOLAK", (dialog, which) -> {
-            showConfirmationDialog(application, "rejected", "menolak");
+        builder.setNegativeButton("✗ REJECT", (dialog, which) -> {
+            showConfirmationDialog(application, "rejected", "reject");
         });
 
         // Tombol Batal
-        builder.setNeutralButton("Batal", null);
+        builder.setNeutralButton("Cancel", null);
 
         AlertDialog dialog = builder.create();
 
@@ -515,14 +515,14 @@ public class KlienActivity extends AppCompatActivity {
 
     private void showConfirmationDialog(ApplicationItem application, String newStatus, String action) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Konfirmasi");
-        builder.setMessage("Apakah Anda yakin ingin " + action + " lamaran dari " + application.applicantName + "?");
+        builder.setTitle("Confirm");
+        builder.setMessage("Are you sure " + action + " application from " + application.applicantName + "?");
 
-        builder.setPositiveButton("Ya", (dialog, which) -> {
+        builder.setPositiveButton("Yes", (dialog, which) -> {
             updateApplicationStatus(application, newStatus);
         });
 
-        builder.setNegativeButton("Tidak", null);
+        builder.setNegativeButton("No", null);
         builder.show();
     }
 
