@@ -19,7 +19,10 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView;
-
+import android.view.LayoutInflater;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.widget.ScrollView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -59,6 +62,7 @@ public class KlienActivity extends AppCompatActivity {
         int id;
         String title;
         String description;
+        String requirements; // Tambahkan ini
         String status;
         int budget;
         String imagePath;
@@ -66,7 +70,9 @@ public class KlienActivity extends AppCompatActivity {
 
         @Override
         public String toString() {
-            return title + "\n" + description + "\nStatus: " + status +
+            return title + "\n" + description +
+                    "\nRequirements: " + requirements + // Tambahkan ini
+                    "\nStatus: " + status +
                     "\nBudget: Rp " + String.format("%,d", budget) +
                     (imagePath != null && !imagePath.isEmpty() ? "\n📷 Ada gambar" : "");
         }
@@ -107,8 +113,7 @@ public class KlienActivity extends AppCompatActivity {
         // Initialize Views
         initViews();
 
-        // Setup TabHost
-        setupTabHost();
+        // Setup ShowTab
 
         // Load Data
         loadData();
@@ -153,8 +158,19 @@ public class KlienActivity extends AppCompatActivity {
         tvApplications = findViewById(R.id.tv_applications);
         tvCompleted = findViewById(R.id.tv_completed);
 
-        // TabHost
-        tabHost = findViewById(R.id.tabHost);
+        // Tab Buttons
+        Button btnTabMyJobs = findViewById(R.id.btnTabMyJobs);
+        Button btnTabApplications = findViewById(R.id.btnTabApplications);
+        Button btnTabProfile = findViewById(R.id.btnTabProfile);
+
+        // Tab content views
+        ScrollView tabApplications = findViewById(R.id.tabApplications);
+        ScrollView tabProfile = findViewById(R.id.tabProfile);
+
+        // Tab click listeners
+        btnTabMyJobs.setOnClickListener(v -> showTab(0));
+        btnTabApplications.setOnClickListener(v -> showTab(1));
+        btnTabProfile.setOnClickListener(v -> showTab(2));
 
         // Profile Views
         tvClientName = findViewById(R.id.tvClientName);
@@ -184,30 +200,50 @@ public class KlienActivity extends AppCompatActivity {
 
         listMyJobs.setAdapter(jobsAdapter);
         listApplications.setAdapter(applicationsAdapter);
+
+        // Show first tab by default
+        showTab(0);
     }
 
-    private void setupTabHost() {
-        tabHost.setup();
+    private void showTab(int tabIndex) {
+        // Hide all tabs
+        findViewById(R.id.tabMyJobs).setVisibility(View.GONE);
+        findViewById(R.id.tabApplications).setVisibility(View.GONE);
+        findViewById(R.id.tabProfile).setVisibility(View.GONE);
 
-        // Tab 1: My Jobs
-        TabHost.TabSpec tabMyJobs = tabHost.newTabSpec("myjobs");
-        tabMyJobs.setContent(R.id.tabMyJobs);
-        tabMyJobs.setIndicator("Job Saya");
-        tabHost.addTab(tabMyJobs);
+        // Reset all button colors
+        Button btnTabMyJobs = findViewById(R.id.btnTabMyJobs);
+        Button btnTabApplications = findViewById(R.id.btnTabApplications);
+        Button btnTabProfile = findViewById(R.id.btnTabProfile);
 
-        // Tab 2: Applications
-        TabHost.TabSpec tabApplications = tabHost.newTabSpec("applications");
-        tabApplications.setContent(R.id.tabApplications);
-        tabApplications.setIndicator("Lamaran");
-        tabHost.addTab(tabApplications);
+        btnTabMyJobs.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#E2E8F0")));
+        btnTabMyJobs.setTextColor(Color.parseColor("#64748B"));
+        btnTabApplications.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#E2E8F0")));
+        btnTabApplications.setTextColor(Color.parseColor("#64748B"));
+        btnTabProfile.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#E2E8F0")));
+        btnTabProfile.setTextColor(Color.parseColor("#64748B"));
 
-        // Tab 3: Profile
-        TabHost.TabSpec tabProfile = tabHost.newTabSpec("profile");
-        tabProfile.setContent(R.id.tabProfile);
-        tabProfile.setIndicator("Profile");
-        tabHost.addTab(tabProfile);
-
-        tabHost.setCurrentTab(0);
+        // Show selected tab and highlight button
+        switch (tabIndex) {
+            case 0:
+                findViewById(R.id.tabMyJobs).setVisibility(View.VISIBLE);
+                btnTabMyJobs.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#2563EB")));
+                btnTabMyJobs.setTextColor(Color.WHITE);
+                loadMyJobs();
+                break;
+            case 1:
+                findViewById(R.id.tabApplications).setVisibility(View.VISIBLE);
+                btnTabApplications.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#2563EB")));
+                btnTabApplications.setTextColor(Color.WHITE);
+                loadApplications();
+                break;
+            case 2:
+                findViewById(R.id.tabProfile).setVisibility(View.VISIBLE);
+                btnTabProfile.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#2563EB")));
+                btnTabProfile.setTextColor(Color.WHITE);
+                loadUserProfile();
+                break;
+        }
     }
 
     private void loadData() {
@@ -249,6 +285,7 @@ public class KlienActivity extends AppCompatActivity {
                     job.id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
                     job.title = cursor.getString(cursor.getColumnIndexOrThrow("title"));
                     job.description = cursor.getString(cursor.getColumnIndexOrThrow("description"));
+                    job.requirements = cursor.getString(cursor.getColumnIndexOrThrow("requirements"));
                     job.status = cursor.getString(cursor.getColumnIndexOrThrow("status"));
                     job.budget = cursor.getInt(cursor.getColumnIndexOrThrow("budget"));
                     job.imagePath = cursor.getString(cursor.getColumnIndexOrThrow("image_path"));
@@ -455,20 +492,7 @@ public class KlienActivity extends AppCompatActivity {
                     .show();
         });
 
-        // Tab change listener
-        tabHost.setOnTabChangedListener(tabId -> {
-            switch (tabId) {
-                case "myjobs":
-                    loadMyJobs();
-                    break;
-                case "applications":
-                    loadApplications();
-                    break;
-                case "profile":
-                    loadUserProfile();
-                    break;
-            }
-        });
+        // Remove the entire TabHost listener section
     }
 
     private void showApplicationActionDialog(ApplicationItem application) {
@@ -574,10 +598,12 @@ public class KlienActivity extends AppCompatActivity {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_edit_job, null);
         EditText etTitle = dialogView.findViewById(R.id.etEditJobTitle);
         EditText etDescription = dialogView.findViewById(R.id.etEditJobDescription);
+        EditText etRequirements = dialogView.findViewById(R.id.etEditJobRequirements);
         EditText etBudget = dialogView.findViewById(R.id.etEditJobBudget);
 
         etTitle.setText(job.title);
         etDescription.setText(job.description);
+        etRequirements.setText(job.requirements);
         etBudget.setText(String.valueOf(job.budget));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -587,9 +613,10 @@ public class KlienActivity extends AppCompatActivity {
         builder.setPositiveButton("Save", (dialog, which) -> {
             String newTitle = etTitle.getText().toString().trim();
             String newDescription = etDescription.getText().toString().trim();
+            String newRequirements = etRequirements.getText().toString().trim();
             String budgetStr = etBudget.getText().toString().trim();
 
-            if (newTitle.isEmpty() || newDescription.isEmpty() || budgetStr.isEmpty()) {
+            if (newTitle.isEmpty() || newDescription.isEmpty() || newRequirements.isEmpty() || budgetStr.isEmpty()) {
                 Toast.makeText(this, "Semua field harus diisi", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -602,7 +629,8 @@ public class KlienActivity extends AppCompatActivity {
                 return;
             }
 
-            boolean updated = dbHelper.updateJob(job.id, newTitle, newDescription, newBudget, job.imagePath);
+            // Update pemanggilan updateJob:
+            boolean updated = dbHelper.updateJob(job.id, newTitle, newDescription, newRequirements, newBudget, job.imagePath);
 
             if (updated) {
                 Toast.makeText(this, "Job berhasil diperbarui", Toast.LENGTH_SHORT).show();

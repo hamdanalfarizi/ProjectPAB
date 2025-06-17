@@ -90,8 +90,9 @@ public class AdminActivity extends AppCompatActivity {
                 String email = cursor.getString(cursor.getColumnIndexOrThrow("email"));
                 String username = cursor.getString(cursor.getColumnIndexOrThrow("username"));
                 String role = cursor.getString(cursor.getColumnIndexOrThrow("role"));
+                int isActive = cursor.getInt(cursor.getColumnIndexOrThrow("is_active"));
 
-                userList.add(new User(id, email, username, role));
+                userList.add(new User(id, email, username, role, isActive));
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -123,21 +124,23 @@ public class AdminActivity extends AppCompatActivity {
         tvUserCount.setText("Total User: " + userList.size());
     }
 
-    private void deleteUser(User user) {
+    private void toggleUserStatus(User user) {
         if (user.getEmail().equals("admin@gmail.com")) {
-            Toast.makeText(this, "Admin tidak dapat dihapus!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Status admin tidak dapat diubah!", Toast.LENGTH_SHORT).show();
             return;
         }
 
         new AlertDialog.Builder(this)
-                .setTitle("Konfirmasi Hapus")
-                .setMessage("Apakah Anda yakin ingin menghapus user: " + user.getUsername() + "?")
+                .setTitle("Konfirmasi")
+                .setMessage("Apakah Anda yakin ingin " +
+                        (user.isActive() ? "menonaktifkan" : "mengaktifkan") +
+                        " user: " + user.getUsername() + "?")
                 .setPositiveButton("Ya", (dialog, which) -> {
-                    if (dbHelper.deleteUser(user.getEmail())) {
-                        Toast.makeText(this, "User berhasil dihapus", Toast.LENGTH_SHORT).show();
+                    if (dbHelper.toggleUserStatus(user.getEmail())) {
+                        Toast.makeText(this, "Status user berhasil diubah", Toast.LENGTH_SHORT).show();
                         loadUsers();
                     } else {
-                        Toast.makeText(this, "Gagal menghapus user", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Gagal mengubah status user", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton("Tidak", null)
@@ -150,7 +153,8 @@ public class AdminActivity extends AppCompatActivity {
                 .setMessage("ID: " + user.getId() +
                         "\nEmail: " + user.getEmail() +
                         "\nUsername: " + user.getUsername() +
-                        "\nRole: " + user.getRole())
+                        "\nRole: " + user.getRole() +
+                        "\nStatus: " + (user.isActive() ? "Aktif" : "Nonaktif"))
                 .setPositiveButton("OK", null)
                 .show();
     }
@@ -160,7 +164,6 @@ public class AdminActivity extends AppCompatActivity {
                 .setTitle("Konfirmasi Logout")
                 .setMessage("Apakah Anda yakin ingin logout?")
                 .setPositiveButton("Ya", (dialog, which) -> {
-                    // Ganti dengan MainActivity atau LoginActivity sesuai dengan project Anda
                     Intent intent = new Intent(AdminActivity.this, LoginActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
@@ -176,18 +179,22 @@ public class AdminActivity extends AppCompatActivity {
         private String email;
         private String username;
         private String role;
+        private int isActive;
 
-        public User(int id, String email, String username, String role) {
+        public User(int id, String email, String username, String role, int isActive) {
             this.id = id;
             this.email = email;
             this.username = username;
             this.role = role;
+            this.isActive = isActive;
         }
 
         public int getId() { return id; }
         public String getEmail() { return email; }
         public String getUsername() { return username; }
         public String getRole() { return role; }
+        public int getIsActive() { return isActive; }
+        public boolean isActive() { return isActive == 1; }
     }
 
     // Custom Adapter for User List
@@ -220,12 +227,22 @@ public class AdminActivity extends AppCompatActivity {
             TextView tvUsername = convertView.findViewById(R.id.tv_username);
             TextView tvEmail = convertView.findViewById(R.id.tv_email);
             TextView tvRole = convertView.findViewById(R.id.tv_role);
+            TextView tvStatus = convertView.findViewById(R.id.tv_status);
             Button btnDetail = convertView.findViewById(R.id.btn_detail);
-            Button btnDelete = convertView.findViewById(R.id.btn_delete);
+            Button btnToggle = convertView.findViewById(R.id.btn_toggle);
 
             tvUsername.setText(user.getUsername());
             tvEmail.setText(user.getEmail());
             tvRole.setText(user.getRole());
+
+            // Tampilkan status
+            if (user.isActive()) {
+                tvStatus.setText("Aktif");
+                tvStatus.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
+            } else {
+                tvStatus.setText("Nonaktif");
+                tvStatus.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+            }
 
             // Set warna role
             if (user.getRole().equals("Admin")) {
@@ -235,15 +252,18 @@ public class AdminActivity extends AppCompatActivity {
             }
 
             btnDetail.setOnClickListener(v -> showUserDetail(user));
-            btnDelete.setOnClickListener(v -> deleteUser(user));
+            btnToggle.setOnClickListener(v -> toggleUserStatus(user));
 
-            // Disable delete button untuk admin
+            // Update teks tombol berdasarkan status
+            btnToggle.setText(user.isActive() ? "Nonaktifkan" : "Aktifkan");
+
+            // Disable tombol untuk admin
             if (user.getEmail().equals("admin@gmail.com")) {
-                btnDelete.setEnabled(false);
-                btnDelete.setAlpha(0.5f);
+                btnToggle.setEnabled(false);
+                btnToggle.setAlpha(0.5f);
             } else {
-                btnDelete.setEnabled(true);
-                btnDelete.setAlpha(1.0f);
+                btnToggle.setEnabled(true);
+                btnToggle.setAlpha(1.0f);
             }
 
             return convertView;

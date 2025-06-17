@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Teks tab aktif - putih -->
+    <item android:state_selected="true" android:color="#FFFFFF" />
+
+    <!-- Teks tab tidak aktif - abu-abu gelap -->
+    <item android:state_selected="false" android:color="#64748B" />
+
+    <!-- Default state - abu-abu gelap -->
+    <item android:color="#64748B" />
+
+</selector>

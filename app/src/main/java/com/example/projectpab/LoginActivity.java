@@ -127,11 +127,13 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        if (databaseHelper.checkUser(email, password, selectedRole)) {
+        int userStatus = databaseHelper.checkUser(email, password, selectedRole);
+
+        if (userStatus == 1) { // User aktif
             // Simpan atau hapus credentials berdasarkan checkbox (untuk Remember Me)
             saveCredentials(email, password);
 
-            // TAMBAHAN: Buat session untuk activity tujuan
+            // Buat session untuk activity tujuan
             createUserSession(email, selectedRole);
 
             Toast.makeText(this, "Login berhasil sebagai " + selectedRole, Toast.LENGTH_SHORT).show();
@@ -139,7 +141,11 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = getActivityIntent();
             startActivity(intent);
             finish();
-        } else {
+        }
+        else if (userStatus == 0) { // User nonaktif
+            Toast.makeText(this, "Akun Anda dinonaktifkan oleh admin", Toast.LENGTH_SHORT).show();
+        }
+        else { // User tidak ditemukan
             Toast.makeText(this, "Email, password, atau role salah", Toast.LENGTH_SHORT).show();
         }
     }

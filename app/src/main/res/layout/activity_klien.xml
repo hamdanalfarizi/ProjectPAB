@@ -6,14 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#FFFFFF"
+    android:background="#F8FAFC"
     tools:context=".KlienActivity">
 
     <!-- Bar Atas -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:background="#FFFFFF"
+        android:elevation="2dp">
 
         <ImageView
             android:id="@+id/logoApp"
@@ -28,7 +30,7 @@
             android:text="Dashboard Klien"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="#212121"
+            android:textColor="#1E293B"
             android:layout_centerInParent="true" />
     </RelativeLayout>
 
@@ -96,7 +98,7 @@
                     android:gravity="center"
                     android:orientation="vertical"
                     android:padding="8dp"
-                    android:background="#FF9800">
+                    android:background="#F59E0B">
 
                     <TextView
                         android:id="@+id/tv_applications"
@@ -120,6 +122,7 @@
 
             <!-- Completed Projects Card -->
             <androidx.cardview.widget.CardView
+                android:id="@+id/project_completed"
                 android:layout_width="0dp"
                 android:layout_height="80dp"
                 android:layout_marginStart="8dp"
@@ -133,7 +136,7 @@
                     android:gravity="center"
                     android:orientation="vertical"
                     android:padding="8dp"
-                    android:background="#4CAF50">
+                    android:background="#10B981">
 
                     <TextView
                         android:id="@+id/tv_completed"
@@ -159,207 +162,342 @@
 
     </ScrollView>
 
-    <!-- TabHost untuk navigasi -->
-    <android.widget.TabHost
-        android:id="@+id/tabHost"
+    <!-- Tab Navigation dengan ViewPager (Modern Approach) -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:orientation="vertical">
 
+        <!-- Custom Tab Buttons -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:elevation="3dp"
+            android:orientation="horizontal"
+            android:paddingVertical="8dp"
+            android:paddingHorizontal="16dp">
 
-            <TabWidget
-                android:id="@android:id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#2563EB"
-                android:padding="8dp"
-                android:tabStripEnabled="false" />
+            <!-- Each button is wrapped in a FrameLayout to increase touch area -->
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                android:padding="4dp">
+
+                <Button
+                    android:id="@+id/btnTabMyJobs"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center"
+                    android:text="Job Saya"
+                    android:textAllCaps="false"
+                    android:textSize="12sp"
+                    android:backgroundTint="#2563EB"
+                    android:textColor="#FFFFFF" />
+            </FrameLayout>
 
             <FrameLayout
-                android:id="@android:id/tabcontent"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="4dp"
+                android:padding="4dp">
+
+                <Button
+                    android:id="@+id/btnTabApplications"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center"
+                    android:text="Lamaran"
+                    android:textAllCaps="false"
+                    android:textSize="12sp"
+                    android:backgroundTint="#E2E8F0"
+                    android:textColor="#64748B" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                android:padding="4dp">
+
+                <Button
+                    android:id="@+id/btnTabProfile"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center"
+                    android:text="Profile"
+                    android:textAllCaps="false"
+                    android:textSize="12sp"
+                    android:backgroundTint="#E2E8F0"
+                    android:textColor="#64748B" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <!-- Content Container -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#F8FAFC"
+            android:padding="12dp">
+
+            <!-- TAB JOB SAYA -->
+            <LinearLayout
+                android:id="@+id/tabMyJobs"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="12dp">
+                android:orientation="vertical"
+                android:padding="16dp">
 
-                <!-- TAB JOB SAYA -->
-                <ScrollView
-                    android:id="@+id/tabMyJobs"
+                <!-- Search Bar tetap terlihat -->
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#FFFFFF">
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    app:cardElevation="2dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardBackgroundColor="#FFFFFF">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
+                        android:padding="12dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
 
-                        <!-- Search Bar untuk Job -->
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="12dp"
-                            app:cardElevation="4dp"
-                            app:cardCornerRadius="12dp">
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/ic_menu_search"
+                            android:layout_marginEnd="12dp" />
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:padding="8dp"
-                                android:orientation="horizontal"
-                                android:gravity="center_vertical">
+                        <EditText
+                            android:id="@+id/et_search_my_jobs"
+                            android:layout_width="0dp"
+                            android:layout_height="48dp"
+                            android:layout_weight="1"
+                            android:hint="Cari job yang sudah saya posting..."
+                            android:textColorHint="#94A3B8"
+                            android:textColor="#1E293B"
+                            android:background="@android:color/transparent"
+                            android:inputType="text"
+                            android:textSize="14sp"
+                            android:paddingStart="0dp"
+                            android:paddingEnd="0dp" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
 
-                                <ImageView
-                                    android:layout_width="32dp"
-                                    android:layout_height="32dp"
-                                    android:src="@android:drawable/ic_menu_search" />
+                <!-- ScrollView hanya membungkus item daftar -->
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
 
-                                <EditText
-                                    android:id="@+id/et_search_my_jobs"
-                                    android:layout_width="0dp"
-                                    android:layout_height="48dp"
-                                    android:layout_weight="1"
-                                    android:layout_marginStart="8dp"
-                                    android:hint="Cari job yang sudah saya posting..."
-                                    android:background="@android:color/transparent"
-                                    android:inputType="text" />
-                            </LinearLayout>
-                        </androidx.cardview.widget.CardView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                        <!-- ListView untuk My Jobs -->
+                        <!-- ListView atau item card -->
                         <ListView
                             android:id="@+id/listMyJobs"
                             android:layout_width="match_parent"
-                            android:layout_height="300dp"
-                            android:divider="@drawable/item_border"
-                            android:dividerHeight="5dp" />
+                            android:layout_height="500dp"
+                            android:divider="@color/material_dynamic_tertiary10"
+                            android:dividerHeight="8dp"
+                            android:scrollbars="none"
+                            android:nestedScrollingEnabled="true" />
 
-                    </LinearLayout>
-                </ScrollView>
-
-                <!-- TAB LAMARAN -->
-                <ScrollView
-                    android:id="@+id/tabApplications"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#FFFFFF">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Lamaran Masuk"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:textColor="#212121"
-                            android:layout_marginBottom="12dp" />
-
-                        <!-- ListView untuk Applications -->
-                        <ListView
-                            android:id="@+id/listApplications"
+                        <!-- Contoh item -->
+                        <androidx.cardview.widget.CardView
                             android:layout_width="match_parent"
-                            android:layout_height="300dp"
-                            android:divider="@drawable/item_border"
-                            android:dividerHeight="8dp" />
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            app:cardElevation="2dp"
+                            app:cardCornerRadius="12dp"
+                            app:cardBackgroundColor="#FFFFFF">
+                        </androidx.cardview.widget.CardView>
 
                     </LinearLayout>
                 </ScrollView>
 
-                <!-- TAB PROFILE -->
-                <ScrollView
-                    android:id="@+id/tabProfile"
+            </LinearLayout>
+
+            <!-- TAB LAMARAN -->
+            <ScrollView
+                android:id="@+id/tabApplications"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#FFFFFF"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
                     android:padding="16dp">
 
-                    <LinearLayout
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Lamaran Masuk"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textColor="#1E293B"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- ListView untuk Applications -->
+                    <ListView
+                        android:id="@+id/listApplications"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:divider="@android:color/transparent"
+                        android:dividerHeight="8dp"
+                        android:scrollbars="none" />
+
+                    <!-- Sample Application Card -->
+                    <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="center">
+                        android:layout_marginTop="8dp"
+                        app:cardElevation="2dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardBackgroundColor="#FFFFFF">
 
-                        <ImageView
-                            android:id="@+id/profileImage"
-                            android:layout_width="120dp"
-                            android:layout_height="120dp"
-                            android:src="@drawable/fotoprofile"
-                            android:layout_marginTop="16dp"
-                            android:background="@drawable/bg_circle"
-                            android:padding="8dp"
-                            android:scaleType="centerCrop" />
-
-                        <!-- Tombol Edit Profile -->
-                        <Button
-                            android:id="@+id/btnEditProfile"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Edit Profile"
-                            android:textAllCaps="false"
-                            android:layout_marginTop="12dp"
-                            android:backgroundTint="#2563EB"
-                            android:textColor="#FFFFFF"
-                            android:drawablePadding="8dp"
-                            android:paddingStart="24dp"
-                            android:paddingEnd="24dp"
-                            android:layout_gravity="center" />
+                            android:orientation="vertical"
+                            android:padding="16dp">
 
-                        <TextView
-                            android:id="@+id/tvClientName"
-                            android:layout_width="wrap_content"
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Nama Pelamar"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:textColor="#1E293B" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Posisi: Frontend Developer"
+                                android:textSize="14sp"
+                                android:textColor="#64748B"
+                                android:layout_marginTop="4dp" />
+
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+            </ScrollView>
+
+            <!-- TAB PROFILE -->
+            <ScrollView
+                android:id="@+id/tabProfile"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="16dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <!-- Profile Card Container -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="3dp"
+                        app:cardBackgroundColor="#FFFFFF"
+                        android:layout_marginBottom="16dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Nama Klien"
-                            android:textColor="#212121"
-                            android:textSize="18sp"
-                            android:layout_marginTop="16dp" />
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:padding="24dp">
 
-                        <TextView
-                            android:id="@+id/tvClientEmail"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="email@example.com"
-                            android:textColor="#424242"
-                            android:textSize="16sp"
-                            android:layout_marginTop="8dp" />
+                            <ImageView
+                                android:id="@+id/profileImage"
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                android:src="@drawable/fotoprofile"
+                                android:background="@drawable/bg_circle"
+                                android:padding="4dp"
+                                android:scaleType="centerCrop"
+                                android:elevation="2dp" />
 
-                        <TextView
-                            android:id="@+id/tvClientCompany"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Nama Perusahaan"
-                            android:textColor="#424242"
-                            android:textSize="16sp"
-                            android:layout_marginTop="8dp" />
+                            <!-- Tombol Edit Profile -->
+                            <Button
+                                android:id="@+id/btnEditProfile"
+                                android:layout_width="wrap_content"
+                                android:layout_height="48dp"
+                                android:text="Edit Profile"
+                                android:textAllCaps="false"
+                                android:layout_marginTop="16dp"
+                                android:backgroundTint="#2563EB"
+                                android:textColor="#FFFFFF"
+                                android:textSize="14sp"
+                                android:paddingHorizontal="24dp"
+                                android:layout_gravity="center" />
 
-                        <!-- Tombol Logout -->
-                        <Button
-                            android:id="@+id/btnLogout"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Logout"
-                            android:textAllCaps="false"
-                            android:layout_marginTop="24dp"
-                            android:backgroundTint="#F44336"
-                            android:textColor="#FFFFFF"
-                            android:paddingStart="32dp"
-                            android:paddingEnd="32dp"
-                            android:layout_gravity="center" />
+                            <TextView
+                                android:id="@+id/tvClientName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Nama Klien"
+                                android:textColor="#1E293B"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
+                                android:layout_marginTop="20dp" />
 
-                    </LinearLayout>
-                </ScrollView>
+                            <TextView
+                                android:id="@+id/tvClientEmail"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="email@example.com"
+                                android:textColor="#64748B"
+                                android:textSize="16sp"
+                                android:layout_marginTop="8dp" />
 
-            </FrameLayout>
-        </LinearLayout>
-    </android.widget.TabHost>
+                            <TextView
+                                android:id="@+id/tvClientCompany"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Nama Perusahaan"
+                                android:textColor="#64748B"
+                                android:textSize="16sp"
+                                android:layout_marginTop="4dp" />
+
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- Tombol Logout -->
+                    <Button
+                        android:id="@+id/btnLogout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:text="Logout"
+                        android:textAllCaps="false"
+                        android:backgroundTint="#EF4444"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:paddingHorizontal="32dp"
+                        android:layout_gravity="center" />
+
+                </LinearLayout>
+            </ScrollView>
+
+        </FrameLayout>
+    </LinearLayout>
 
     <!-- Floating Action Button untuk Post Job -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -370,7 +508,8 @@
         android:layout_margin="16dp"
         android:backgroundTint="#2563EB"
         android:src="@android:drawable/ic_input_add"
-        android:tint="#FFFFFF"
+        app:tint="#FFFFFF"
+        android:elevation="6dp"
         android:contentDescription="Post Pekerjaan Baru" />
 
 </LinearLayout>

@@ -25,6 +25,16 @@
         android:background="?attr/editTextBackground"/>
 
     <EditText
+        android:id="@+id/etEditJobRequirements"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="Job Requirements"
+        android:inputType="textMultiLine"
+        android:minLines="3"
+        android:gravity="top|start"/>
+
+    <EditText
         android:id="@+id/etEditJobBudget"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

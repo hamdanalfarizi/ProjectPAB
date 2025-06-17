@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Tab aktif/terpilih -->
+    <item android:state_selected="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#2563EB" />
+            <corners android:radius="24dp" />
+        </shape>
+    </item>
+
+    <!-- Tab tidak aktif -->
+    <item android:state_selected="false">
+        <shape android:shape="rectangle">
+            <solid android:color="#F1F5F9" />
+            <corners android:radius="24dp" />
+        </shape>
+    </item>
+
+    <!-- Default state -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#F1F5F9" />
+            <corners android:radius="24dp" />
+        </shape>
+    </item>
+
+</selector>

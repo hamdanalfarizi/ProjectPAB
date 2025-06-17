@@ -23,6 +23,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_ROLE = "role";
     private static final String COLUMN_NAME = "name";
     private static final String COLUMN_COMPANY = "company";
+    public static final String COLUMN_IS_ACTIVE = "is_active";
 
     // Table Jobs
     private static final String TABLE_JOBS = "jobs";
@@ -32,6 +33,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_CLIENT_ID = "client_id";
     private static final String COLUMN_JOB_STATUS = "status";
     private static final String COLUMN_BUDGET = "budget";
+    private static final String COLUMN_REQUIREMENTS = "requirements";
     private static final String COLUMN_CREATED_AT = "created_at";
     private static final String COLUMN_JOB_IMAGE = "image_path";
 
@@ -42,6 +44,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_USER_ID = "user_id";
     private static final String COLUMN_APP_STATUS = "status";
     private static final String COLUMN_APPLIED_AT = "applied_at";
+
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -56,13 +59,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_NAME + " TEXT, " +
                 COLUMN_PASSWORD + " TEXT, " +
                 COLUMN_ROLE + " TEXT, " +
-                COLUMN_COMPANY + " TEXT)";
+                COLUMN_COMPANY + " TEXT, " +
+                "is_active INTEGER DEFAULT 1)"; // 1 = aktif, 0 = nonaktif
         db.execSQL(createUsersTable);
 
         String createJobsTable = "CREATE TABLE " + TABLE_JOBS + " (" +
                 COLUMN_JOB_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_JOB_TITLE + " TEXT NOT NULL, " +
                 COLUMN_JOB_DESCRIPTION + " TEXT, " +
+                COLUMN_REQUIREMENTS + " TEXT, " + // Tambahkan ini
                 COLUMN_CLIENT_ID + " INTEGER, " +
                 COLUMN_JOB_STATUS + " TEXT DEFAULT 'active', " +
                 COLUMN_BUDGET + " INTEGER, " +
@@ -93,6 +98,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(createNotificationsTable);
 
         // Insert sample data
+
+        // Insert sample data - Admin
         ContentValues adminValues = new ContentValues();
         adminValues.put(COLUMN_EMAIL, "admin@gmail.com");
         adminValues.put(COLUMN_USERNAME, "Admin");
@@ -100,6 +107,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         adminValues.put(COLUMN_PASSWORD, "admin123");
         adminValues.put(COLUMN_ROLE, "Admin");
         adminValues.put(COLUMN_COMPANY, "System");
+        adminValues.put("is_active", 1); // Status aktif
         db.insert(TABLE_USERS, null, adminValues);
 
         ContentValues clientValues = new ContentValues();
@@ -150,6 +158,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (oldVersion < 3) {
             db.execSQL("ALTER TABLE " + TABLE_JOBS + " ADD COLUMN " + COLUMN_JOB_IMAGE + " TEXT");
         }
+        if (oldVersion < 4) {
+            db.execSQL("ALTER TABLE " + TABLE_JOBS + " ADD COLUMN " + COLUMN_REQUIREMENTS + " TEXT");
+        }
     }
 
     public boolean registerUser(String email, String username, String password, String role) {
@@ -166,25 +177,45 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
-    public boolean checkUser(String email, String password, String role) {
+
+    public int checkUser(String email, String password, String role) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_USERS,
-                new String[]{COLUMN_EMAIL},
-                COLUMN_EMAIL + " = ? AND " + COLUMN_PASSWORD + " = ? AND " + COLUMN_ROLE + " = ?",
-                new String[]{email, password, role},
-                null, null, null);
-        boolean exists = cursor.moveToFirst();
+        String[] columns = {COLUMN_ID, COLUMN_IS_ACTIVE};
+        String selection = COLUMN_EMAIL + "=? AND " + COLUMN_PASSWORD + "=? AND " + COLUMN_ROLE + "=?";
+        String[] selectionArgs = {email, password, role};
+
+        Cursor cursor = db.query(TABLE_USERS, columns, selection, selectionArgs, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            int isActive = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_IS_ACTIVE));
+            cursor.close();
+            return isActive; // 1 = aktif, 0 = nonaktif
+        }
         cursor.close();
-        return exists;
+        return -1; // -1 = user tidak ditemukan
     }
 
-    public boolean deleteUser(String email) {
-        if (email.equals("admin@gmail.com")) {
-            return false;
-        }
+    // Tambahkan method untuk toggle status aktif
+    public boolean toggleUserStatus(String email) {
         SQLiteDatabase db = this.getWritableDatabase();
-        int result = db.delete(TABLE_USERS, COLUMN_EMAIL + "=?", new String[]{email});
-        return result > 0;
+
+        // Dapatkan status saat ini
+        Cursor cursor = db.query("users", new String[]{"is_active"},
+                "email=?", new String[]{email}, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            int currentStatus = cursor.getInt(0);
+            int newStatus = (currentStatus == 1) ? 0 : 1;
+
+            ContentValues values = new ContentValues();
+            values.put("is_active", newStatus);
+
+            int result = db.update("users", values, "email=?", new String[]{email});
+            cursor.close();
+            return result > 0;
+        }
+        cursor.close();
+        return false;
     }
 
     public Cursor getAllUsers() {
@@ -273,11 +304,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return role;
     }
 
-    public boolean addJob(String title, String description, int clientId, int budget, String imagePath) {
+    public boolean addJob(String title, String description, String requirements, int clientId, int budget, String imagePath) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_JOB_TITLE, title);
         values.put(COLUMN_JOB_DESCRIPTION, description);
+        values.put(COLUMN_REQUIREMENTS, requirements);
         values.put(COLUMN_CLIENT_ID, clientId);
         values.put(COLUMN_JOB_STATUS, "active");
         values.put(COLUMN_BUDGET, budget);
@@ -287,11 +319,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
-    public boolean updateJob(int jobId, String title, String description, int budget, String imagePath) {
+    public boolean updateJob(int jobId, String title, String description, String requirements, int budget, String imagePath) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_JOB_TITLE, title);
         values.put(COLUMN_JOB_DESCRIPTION, description);
+        values.put(COLUMN_REQUIREMENTS, requirements); // Tambahkan ini
         values.put(COLUMN_BUDGET, budget);
         values.put(COLUMN_JOB_IMAGE, imagePath);
 
@@ -299,14 +332,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result > 0;
     }
 
+    public boolean addJob(String title, String description, String requirements, int clientId, int budget) {
+        return addJob(title, description, requirements, clientId, budget, null);
+    }
+
     public boolean deleteJob(int jobId) {
         SQLiteDatabase db = this.getWritableDatabase();
         int result = db.delete(TABLE_JOBS, COLUMN_JOB_ID + " = ?", new String[]{String.valueOf(jobId)});
         return result > 0;
-    }
-
-    public boolean addJob(String title, String description, int clientId, int budget) {
-        return addJob(title, description, clientId, budget, null);
     }
 
     public boolean updateApplicationStatus(int applicationId, String newStatus) {

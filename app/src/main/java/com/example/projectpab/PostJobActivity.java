@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class PostJobActivity extends AppCompatActivity {
 
-    private EditText etJobTitle, etJobDescription, etJobBudget;
+    private EditText etJobTitle, etJobDescription, etJobBudget, etJobRequirements;
     private Button btnPostJob, btnCancel;
 
     private DatabaseHelper dbHelper;
@@ -57,6 +57,7 @@ public class PostJobActivity extends AppCompatActivity {
     private void initViews() {
         etJobTitle = findViewById(R.id.et_job_title);
         etJobDescription = findViewById(R.id.et_job_description);
+        etJobRequirements = findViewById(R.id.et_job_requirements);
         etJobBudget = findViewById(R.id.et_job_budget);
         btnPostJob = findViewById(R.id.btn_post_job);
         btnCancel = findViewById(R.id.btn_cancel);
@@ -81,12 +82,19 @@ public class PostJobActivity extends AppCompatActivity {
     private void postJob() {
         String title = etJobTitle.getText().toString().trim();
         String description = etJobDescription.getText().toString().trim();
+        String requirements = etJobRequirements.getText().toString().trim(); // Tambahkan ini
         String budgetStr = etJobBudget.getText().toString().trim();
 
         // Validation
         if (TextUtils.isEmpty(title)) {
             etJobTitle.setError("Title is required");
             etJobTitle.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(requirements)) {
+            etJobRequirements.setError("Requirements are required");
+            etJobRequirements.requestFocus();
             return;
         }
 
@@ -116,8 +124,8 @@ public class PostJobActivity extends AppCompatActivity {
             return;
         }
 
-        // Add job to database
-        boolean success = dbHelper.addJob(title, description, currentUserId, budget);
+        // Update pemanggilan addJob
+        boolean success = dbHelper.addJob(title, description, requirements, currentUserId, budget, null);
 
         if (success) {
             Toast.makeText(this, "Job posted successfully!", Toast.LENGTH_SHORT).show();
