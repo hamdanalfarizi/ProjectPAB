@@ -16,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class JobDetailActivity extends AppCompatActivity {
 
-    private TextView tvJobTitle, tvJobDescription, tvBudget, tvClientName, tvCompany;
+    private TextView tvJobTitle, tvJobDescription, tvBudget, tvClientName, tvCompany, tvRequirements;
     private Button btnBack, btnApply;
 
     private DatabaseHelper dbHelper;
@@ -25,6 +25,7 @@ public class JobDetailActivity extends AppCompatActivity {
     private int jobId;
     private String jobTitle;
     private String jobDescription;
+    private String jobRequirements;
     private int jobBudget;
     private String clientName;
     private String company;
@@ -64,6 +65,7 @@ public class JobDetailActivity extends AppCompatActivity {
     private void initViews() {
         tvJobTitle = findViewById(R.id.tvJobTitle);
         tvJobDescription = findViewById(R.id.tvJobDescription);
+        tvRequirements = findViewById(R.id.tvRequirements);
         tvBudget = findViewById(R.id.tvBudget);
         tvClientName = findViewById(R.id.tvClientName);
         tvCompany = findViewById(R.id.tvCompany);
@@ -94,12 +96,13 @@ public class JobDetailActivity extends AppCompatActivity {
         jobId = intent.getIntExtra("job_id", -1);
         jobTitle = intent.getStringExtra("job_title");
         jobDescription = intent.getStringExtra("job_description");
+        jobRequirements = intent.getStringExtra("job_requirements"); // Tambah ini
         jobBudget = intent.getIntExtra("job_budget", 0);
         clientName = intent.getStringExtra("client_name");
         company = intent.getStringExtra("company");
         clientId = intent.getIntExtra("client_id", -1);
 
-        // If data not passed through intent, try to get from database
+        // Jika data tidak ada di intent, ambil dari database
         if (jobId != -1 && (jobTitle == null || jobTitle.isEmpty())) {
             loadJobFromDatabase();
         }
@@ -115,6 +118,7 @@ public class JobDetailActivity extends AppCompatActivity {
                     if (id == jobId) {
                         jobTitle = cursor.getString(cursor.getColumnIndexOrThrow("title"));
                         jobDescription = cursor.getString(cursor.getColumnIndexOrThrow("description"));
+                        jobRequirements = cursor.getString(cursor.getColumnIndexOrThrow("requirements")); // Tambah ini
                         jobBudget = cursor.getInt(cursor.getColumnIndexOrThrow("budget"));
                         clientId = cursor.getInt(cursor.getColumnIndexOrThrow("client_id"));
 
@@ -166,6 +170,11 @@ public class JobDetailActivity extends AppCompatActivity {
 
         if (tvJobDescription != null) {
             tvJobDescription.setText(jobDescription != null ? jobDescription : "No Description");
+        }
+
+        if (tvRequirements != null) {
+            tvRequirements.setText(jobRequirements != null ?
+                    "Requirements:\n" + jobRequirements : "No Requirements Specified");
         }
 
         if (tvBudget != null) {

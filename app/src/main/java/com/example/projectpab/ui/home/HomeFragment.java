@@ -161,6 +161,7 @@ public class HomeFragment extends Fragment {
                     job.id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
                     job.title = cursor.getString(cursor.getColumnIndexOrThrow("title"));
                     job.description = cursor.getString(cursor.getColumnIndexOrThrow("description"));
+                    job.requirements = cursor.getString(cursor.getColumnIndexOrThrow("requirements"));
                     job.budget = cursor.getInt(cursor.getColumnIndexOrThrow("budget"));
                     job.status = status;
                     job.createdAt = cursor.getString(cursor.getColumnIndexOrThrow("created_at"));
@@ -269,6 +270,7 @@ public class HomeFragment extends Fragment {
             intent.putExtra("job_id", job.id);
             intent.putExtra("job_title", job.title);
             intent.putExtra("job_description", job.description);
+            intent.putExtra("job_requirements", job.requirements);
             intent.putExtra("job_budget", job.budget);
             intent.putExtra("client_name", job.clientName);
             intent.putExtra("company", job.company);
@@ -301,6 +303,7 @@ public class HomeFragment extends Fragment {
         public int id;
         public String title;
         public String description;
+        public String requirements;
         public int budget;
         public String clientName;
         public String company;
