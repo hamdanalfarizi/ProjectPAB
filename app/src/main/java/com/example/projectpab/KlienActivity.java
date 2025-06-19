@@ -84,16 +84,25 @@ public class KlienActivity extends AppCompatActivity {
         String jobTitle;
         String applicantName;
         String status;
+        String jobStatus;  // Baru: untuk menyimpan status job ("active" atau "completed")
         String appliedAt;
 
         @Override
         public String toString() {
+            String statusIcon = "";
+            switch (status.toLowerCase()) {
+                case "pending": statusIcon = "⏳"; break;
+                case "accepted": statusIcon = "✅"; break;
+                case "rejected": statusIcon = "❌"; break;
+            }
+
             return "Job: " + jobTitle +
                     "\nPelamar: " + applicantName +
-                    "\nStatus: " + status.toUpperCase() +
-                    "\nTanggal: " + appliedAt;
+                    "\nStatus Lamaran: " + statusIcon + " " + status.toUpperCase() +
+                    "\nStatus Job: " + (jobStatus.equals("active") ? "🟢 Aktif" : "✅ Selesai");
         }
 
+        // Tetap pertahankan method updateStatus jika digunakan di kode lain
         public void updateStatus(String newStatus) {
             this.status = newStatus;
         }
@@ -308,7 +317,7 @@ public class KlienActivity extends AppCompatActivity {
             while (cursor.moveToNext()) {
                 int jobId = cursor.getInt(cursor.getColumnIndexOrThrow("job_id"));
 
-                // Check if this job belongs to current client
+                // Cek apakah job ini milik klien yang login
                 if (isMyJob(jobId)) {
                     ApplicationItem app = new ApplicationItem();
                     app.id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
@@ -316,34 +325,56 @@ public class KlienActivity extends AppCompatActivity {
                     app.status = cursor.getString(cursor.getColumnIndexOrThrow("status"));
                     app.appliedAt = cursor.getString(cursor.getColumnIndexOrThrow("applied_at"));
 
-                    // Get job title and applicant name
+                    // Ambil judul job dan nama pelamar
                     app.jobTitle = getJobTitle(jobId);
                     int userId = cursor.getInt(cursor.getColumnIndexOrThrow("user_id"));
                     app.applicantName = getUserName(userId);
+
+                    // Ambil STATUS JOB (active/completed)
+                    app.jobStatus = getJobStatus(jobId);  // Method baru
 
                     applicationsList.add(app);
                 }
             }
             cursor.close();
         }
-
         updateApplicationsAdapter();
     }
 
-    private void updateStats() {
-        int activeCount = 0, completedCount = 0;
-
-        for (JobItem job : myJobsList) {
-            if ("active".equals(job.status)) {
-                activeCount++;
-            } else if ("completed".equals(job.status)) {
-                completedCount++;
+    // Method baru untuk mengambil status job
+    private String getJobStatus(int jobId) {
+        Cursor cursor = dbHelper.getAllJobs();
+        while (cursor.moveToNext()) {
+            if (cursor.getInt(cursor.getColumnIndexOrThrow("id")) == jobId) {
+                String status = cursor.getString(cursor.getColumnIndexOrThrow("status"));
+                cursor.close();
+                return status;
             }
         }
+        cursor.close();
+        return "active"; // Default
+    }
 
-        tvActiveJobs.setText(String.valueOf(activeCount));
+    private void updateStats() {
+        int activeJobs = 0;
+        int completedJobs = 0;
+
+        Cursor cursor = dbHelper.getAllJobs();
+        while (cursor.moveToNext()) {
+            int clientId = cursor.getInt(cursor.getColumnIndexOrThrow("client_id"));
+            if (clientId == currentUserId) {
+                String status = cursor.getString(cursor.getColumnIndexOrThrow("status"));
+                if (status.equals("active")) activeJobs++;
+                else if (status.equals("completed")) completedJobs++;
+            }
+        }
+        cursor.close();
+
+        tvActiveJobs.setText(String.valueOf(activeJobs));
+        tvCompleted.setText(String.valueOf(completedJobs));
+
+        // Hitung lamaran (opsional)
         tvApplications.setText(String.valueOf(applicationsList.size()));
-        tvCompleted.setText(String.valueOf(completedCount));
     }
 
     private void updateJobsAdapter() {
@@ -497,44 +528,84 @@ public class KlienActivity extends AppCompatActivity {
 
     private void showApplicationActionDialog(ApplicationItem application) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Manage Applications");
+        builder.setTitle("Kelola Lamaran");
 
         String message = "Job: " + application.jobTitle +
                 "\nPelamar: " + application.applicantName +
-                "\nStatus saat ini: " + application.status.toUpperCase() +
-                "\n\nSelect Action:";
+                "\nStatus Lamaran: " + application.status.toUpperCase() +
+                "\nStatus Job: " + (application.jobStatus.equals("active") ? "🟢 Aktif" : "✅ Selesai");
 
         builder.setMessage(message);
 
-        // Tombol ACC (Terima)
-        builder.setPositiveButton("✓ ACC", (dialog, which) -> {
-            showConfirmationDialog(application, "accepted", "accept");
-        });
+        // Tombol ACC (hanya muncul jika status pending)
+        if (application.status.equals("pending")) {
+            builder.setPositiveButton("✓ Terima", (dialog, which) -> {
+                updateApplicationStatus(application, "accepted");
+            });
+        }
 
-        // Tombol TOLAK
-        builder.setNegativeButton("✗ REJECT", (dialog, which) -> {
-            showConfirmationDialog(application, "rejected", "reject");
-        });
+        // Tombol Tandai Selesai (hanya muncul jika lamaran sudah diterima DAN job masih aktif)
+        if (application.status.equals("accepted") && application.jobStatus.equals("active")) {
+            builder.setNeutralButton("✔ Tandai Selesai", (dialog, which) -> {
+                showCompleteConfirmation(application);
+            });
+        }
 
-        // Tombol Batal
-        builder.setNeutralButton("Cancel", null);
+        // Tombol Tolak
+        builder.setNegativeButton("✗ Tolak", (dialog, which) -> {
+            updateApplicationStatus(application, "rejected");
+        });
 
         AlertDialog dialog = builder.create();
+        dialog.show();
 
-        // Ubah warna tombol setelah dialog ditampilkan
+        // Atur warna tombol
         dialog.setOnShowListener(dialogInterface -> {
             Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            Button neutralButton = dialog.getButton(AlertDialog.BUTTON_NEUTRAL);
             Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
 
-            if (positiveButton != null) {
-                positiveButton.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
-            }
-            if (negativeButton != null) {
-                negativeButton.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
-            }
+            if (positiveButton != null) positiveButton.setTextColor(Color.GREEN);
+            if (neutralButton != null) neutralButton.setTextColor(Color.BLUE);
+            if (negativeButton != null) negativeButton.setTextColor(Color.RED);
         });
+    }
 
-        dialog.show();
+    private void showCompleteConfirmation(ApplicationItem application) {
+        new AlertDialog.Builder(this)
+                .setTitle("Konfirmasi Penyelesaian")
+                .setMessage("Tandai job '" + application.jobTitle + "' sebagai selesai?")
+                .setPositiveButton("Ya", (dialog, which) -> {
+                    boolean success = dbHelper.markJobAsCompleted(application.jobId);
+                    if (success) {
+                        // Update local data
+                        application.jobStatus = "completed";
+                        updateApplicationsAdapter();
+                        updateStats(); // Ini akan memperbarui tv_completed
+                        Toast.makeText(this, "Job ditandai selesai", Toast.LENGTH_SHORT).show();
+
+                        // Kirim notifikasi ke freelancer
+                        sendJobCompleteNotification(application);
+                    }
+                })
+                .setNegativeButton("Batal", null)
+                .show();
+    }
+
+    private void sendJobCompleteNotification(ApplicationItem app) {
+        String title = "Job Selesai";
+        String message = "Job '" + app.jobTitle + "' telah ditandai selesai oleh klien";
+        long timestamp = System.currentTimeMillis();
+
+        int freelancerId = dbHelper.getApplicantIdForApplication(app.id);
+        if (freelancerId != -1) {
+            dbHelper.insertNotification(
+                    String.valueOf(freelancerId),
+                    title,
+                    message,
+                    timestamp
+            );
+        }
     }
 
     private void showConfirmationDialog(ApplicationItem application, String newStatus, String action) {

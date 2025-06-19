@@ -342,6 +342,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result > 0;
     }
 
+    public boolean markJobAsCompleted(int jobId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_JOB_STATUS, "completed");
+
+        int result = db.update(TABLE_JOBS, values,
+                COLUMN_JOB_ID + " = ?",
+                new String[]{String.valueOf(jobId)});
+
+        return result > 0;
+    }
+
     public boolean updateApplicationStatus(int applicationId, String newStatus) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
