@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +14,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
     private EditText etEmail, etNewPassword, etConfirmPassword;
     private Button btnReset;
+    private ImageButton btnBack;
     private DatabaseHelper databaseHelper;
 
     @Override
@@ -20,14 +22,20 @@ public class ResetPasswordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
 
+        // Inisialisasi komponen
         etEmail = findViewById(R.id.etEmail);
         etNewPassword = findViewById(R.id.etNewPassword);
         etConfirmPassword = findViewById(R.id.etConfirmPassword);
         btnReset = findViewById(R.id.btnReset);
+        btnBack = findViewById(R.id.btnBack);
 
         databaseHelper = new DatabaseHelper(this);
 
+        // Aksi tombol reset password
         btnReset.setOnClickListener(v -> resetPassword());
+
+        // Aksi tombol panah kembali
+        btnBack.setOnClickListener(v -> finish());
     }
 
     private void resetPassword() {

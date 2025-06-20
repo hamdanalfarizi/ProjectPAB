@@ -8,6 +8,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.List;
+import android.widget.ImageButton;
 
 public class NotifFreelanceActivity extends AppCompatActivity {
     private ListView listNotifications;
@@ -21,6 +22,10 @@ public class NotifFreelanceActivity extends AppCompatActivity {
 
         listNotifications = findViewById(R.id.listNotifications);
         dbHelper = new DatabaseHelper(this);
+
+        // Tombol back
+        ImageButton btnBack = findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(v -> finish());
 
         // Get current user ID
         SharedPreferences sharedPreferences = getSharedPreferences("UserSession", Context.MODE_PRIVATE);

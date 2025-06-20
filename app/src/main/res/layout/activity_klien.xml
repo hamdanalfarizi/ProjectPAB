@@ -257,15 +257,15 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    app:cardElevation="2dp"
-                    app:cardCornerRadius="12dp"
+                    android:layout_marginBottom="16dp"
+                    app:cardElevation="3dp"
+                    app:cardCornerRadius="16dp"
                     app:cardBackgroundColor="#FFFFFF">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="12dp"
+                        android:padding="16dp"
                         android:orientation="horizontal"
                         android:gravity="center_vertical">
 
@@ -273,7 +273,8 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@android:drawable/ic_menu_search"
-                            android:layout_marginEnd="12dp" />
+                            android:layout_marginEnd="12dp"
+                            android:alpha="0.7" />
 
                         <EditText
                             android:id="@+id/et_search_my_jobs"
@@ -291,39 +292,85 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!-- ScrollView hanya membungkus item daftar -->
-                <ScrollView
+                <!-- Container untuk daftar job dengan card wrapper -->
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp"
+                    app:cardBackgroundColor="#FFFFFF">
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:orientation="vertical">
 
-                        <!-- ListView atau item card -->
-                        <ListView
-                            android:id="@+id/listMyJobs"
-                            android:layout_width="match_parent"
-                            android:layout_height="500dp"
-                            android:divider="@color/material_dynamic_tertiary10"
-                            android:dividerHeight="8dp"
-                            android:scrollbars="none"
-                            android:nestedScrollingEnabled="true" />
-
-                        <!-- Contoh item -->
-                        <androidx.cardview.widget.CardView
+                        <!-- Header -->
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            app:cardElevation="2dp"
-                            app:cardCornerRadius="12dp"
-                            app:cardBackgroundColor="#FFFFFF">
-                        </androidx.cardview.widget.CardView>
+                            android:orientation="horizontal"
+                            android:background="#F1F5F9"
+                            android:padding="16dp"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Daftar Job Saya"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:textColor="#1E293B" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Status"
+                                android:textSize="12sp"
+                                android:textColor="#64748B" />
+                        </LinearLayout>
+
+                        <!-- Garis pemisah header -->
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="#E2E8F0" />
+
+                        <!-- ScrollView untuk ListView -->
+                        <ScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:fillViewport="true">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:padding="8dp">
+
+                                <!-- ListView dengan custom divider yang jelas -->
+                                <ListView
+                                    android:id="@+id/listMyJobs"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:minHeight="400dp"
+                                    android:divider="#E2E8F0"
+                                    android:dividerHeight="2dp"
+                                    android:scrollbars="none"
+                                    android:nestedScrollingEnabled="true"
+                                    android:paddingVertical="8dp"
+                                    android:clipToPadding="false"
+                                    android:footerDividersEnabled="false"
+                                    android:headerDividersEnabled="false" />
+
+                            </LinearLayout>
+                        </ScrollView>
 
                     </LinearLayout>
-                </ScrollView>
+                </androidx.cardview.widget.CardView>
 
             </LinearLayout>
 
@@ -340,23 +387,115 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Lamaran Masuk"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:textColor="#1E293B"
-                        android:layout_marginBottom="16dp" />
-
-                    <!-- ListView untuk Applications -->
-                    <ListView
-                        android:id="@+id/listApplications"
+                    <!-- Header Card dengan Icon -->
+                    <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
-                        android:layout_height="300dp"
-                        android:divider="@android:color/transparent"
-                        android:dividerHeight="8dp"
-                        android:scrollbars="none" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="3dp"
+                        app:cardBackgroundColor="#FFFFFF">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="20dp"
+                            android:gravity="center_vertical">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:src="@android:drawable/stat_notify_chat"
+                                android:layout_marginEnd="16dp"/>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Lamaran Masuk"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold"
+                                    android:textColor="#1E293B" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Kelola lamaran dari freelancer"
+                                    android:textSize="14sp"
+                                    android:textColor="#64748B"
+                                    android:layout_marginTop="4dp" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- Container untuk ListView Lamaran -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="4dp"
+                        app:cardBackgroundColor="#FFFFFF">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <!-- Header untuk daftar lamaran -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:background="#FEF3C7"
+                                android:padding="16dp"
+                                android:gravity="center_vertical">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Daftar Pelamar"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    android:textColor="#1E293B" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Aksi"
+                                    android:textSize="12sp"
+                                    android:textColor="#64748B" />
+                            </LinearLayout>
+
+                            <!-- Garis pemisah header -->
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="2dp"
+                                android:background="#F59E0B" />
+
+                            <!-- ListView untuk Applications dengan divider yang jelas -->
+                            <ListView
+                                android:id="@+id/listApplications"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:minHeight="300dp"
+                                android:divider="#E2E8F0"
+                                android:dividerHeight="2dp"
+                                android:scrollbars="none"
+                                android:paddingVertical="8dp"
+                                android:paddingHorizontal="8dp"
+                                android:clipToPadding="false"
+                                android:footerDividersEnabled="false"
+                                android:headerDividersEnabled="false" />
+
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
 
                 </LinearLayout>
             </ScrollView>

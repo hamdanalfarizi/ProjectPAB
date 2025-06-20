@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -50,6 +51,10 @@ public class EditProfileActivity extends AppCompatActivity {
         // Save button click listener
         Button btnSave = findViewById(R.id.btnSave);
         btnSave.setOnClickListener(v -> saveProfile());
+
+        // Back
+        ImageButton btnBack = findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(v -> finish()); // kembali ke halaman sebelumnya
 
         // Load existing profile data
         loadProfileData();
